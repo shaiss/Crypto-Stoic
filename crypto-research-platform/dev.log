@@ -1,0 +1,233 @@
+
+> crypto-research-platform@0.1.0 dev
+> next dev --turbopack
+
+ ΓÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\Shai\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\Shai\Documents\Code Workspaces\Crypto-Stoic\crypto-research-platform\package-lock.json
+
+   Γû▓ Next.js 15.5.6 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.210.179:3000
+   - Environments: .env.local
+
+ Γ£ô Starting...
+ Γ£ô Ready in 1959ms
+ Γùï Compiling /api/market ...
+ Γ£ô Compiled /api/market in 1378ms
+[API] Fetching market data from CoinGecko...
+ GET /api/market?perPage=10 200 in 2059ms
+ Γùï Compiling / ...
+ Γ£ô Compiled / in 3.6s
+ GET / 200 in 4285ms
+ Γ£ô Compiled /favicon.ico in 434ms
+[API] Fetching market data from CoinGecko...
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 573ms
+ GET /api/search?type=trending 200 in 759ms
+ GET /api/market?includeGlobal=true 200 in 784ms
+[API] Error fetching historical prices for bitcoin: Error [AxiosError]: Request failed with status code 401
+    at async fetchHistoricalPrices (src\lib\crypto-api.ts:137:22)
+    at async GET (src\app\api\assets\[id]\route.ts:26:29)
+  135 | ): Promise<{ prices: number[][]; volumes: number[][] }> {
+  136 |   try {
+> 137 |     const response = await coingeckoClient.get(`/coins/${assetId}/market_chart`, {
+      |                      ^
+  138 |       params: {
+  139 |         vs_currency: 'usd',
+  140 |         days, {
+  code: 'ERR_BAD_REQUEST',
+  config: [Object],
+  request: [ClientRequest],
+  response: [Object],
+  status: 401,
+  constructor: [Function],
+  toJSON: [Function: toJSON]
+}
+Asset API Error: Error: Failed to fetch historical prices for bitcoin
+    at fetchHistoricalPrices (src\lib\crypto-api.ts:151:11)
+    at async GET (src\app\api\assets\[id]\route.ts:26:29)
+  149 |   } catch (error) {
+  150 |     console.error(`[API] Error fetching historical prices for ${assetId}:`, error);
+> 151 |     throw new Error(`Failed to fetch historical prices for ${assetId}`);
+      |           ^
+  152 |   }
+  153 | }
+  154 |
+ GET /api/assets/bitcoin?type=history&days=30 500 in 1860ms
+ Γ£ô Compiled /markets in 406ms
+ GET /markets 200 in 509ms
+[API] Fetching market data from CoinGecko...
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 398ms
+[API] Fetching market data from CoinGecko...
+[API] Error fetching global data: Error [AxiosError]: Request failed with status code 429
+    at async fetchGlobalData (src\lib\crypto-api.ts:189:22)
+    at async GET (src\app\api\market\route.ts:15:26)
+  187 | export async function fetchGlobalData(): Promise<any> {
+  188 |   try {
+> 189 |     const response = await coingeckoClient.get('/global');
+      |                      ^
+  190 |     return response.data.data;
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error); {
+  code: 'ERR_BAD_REQUEST',
+  config: [Object],
+  request: [ClientRequest],
+  response: [Object],
+  status: 429,
+  constructor: [Function],
+  toJSON: [Function: toJSON]
+}
+Market API Error: Error: Failed to fetch global market data
+    at fetchGlobalData (src\lib\crypto-api.ts:193:11)
+    at async GET (src\app\api\market\route.ts:15:26)
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error);
+> 193 |     throw new Error('Failed to fetch global market data');
+      |           ^
+  194 |   }
+  195 | }
+  196 |
+ GET /api/market?perPage=100&includeGlobal=true 500 in 640ms
+[API] Error fetching global data: Error [AxiosError]: Request failed with status code 429
+    at async fetchGlobalData (src\lib\crypto-api.ts:189:22)
+    at async GET (src\app\api\market\route.ts:15:26)
+  187 | export async function fetchGlobalData(): Promise<any> {
+  188 |   try {
+> 189 |     const response = await coingeckoClient.get('/global');
+      |                      ^
+  190 |     return response.data.data;
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error); {
+  code: 'ERR_BAD_REQUEST',
+  config: [Object],
+  request: [ClientRequest],
+  response: [Object],
+  status: 429,
+  constructor: [Function],
+  toJSON: [Function: toJSON]
+}
+Market API Error: Error: Failed to fetch global market data
+    at fetchGlobalData (src\lib\crypto-api.ts:193:11)
+    at async GET (src\app\api\market\route.ts:15:26)
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error);
+> 193 |     throw new Error('Failed to fetch global market data');
+      |           ^
+  194 |   }
+  195 | }
+  196 |
+ GET /api/market?includeGlobal=true 500 in 811ms
+[API] Fetching market data from CoinGecko...
+[API] Fetching market data from CoinGecko...
+[API] CoinGecko failed, trying CoinMarketCap... Request failed with status code 429
+[API] CoinGecko failed, trying CoinMarketCap... Request failed with status code 429
+[API] Error fetching global data: Error [AxiosError]: Request failed with status code 429
+    at async fetchGlobalData (src\lib\crypto-api.ts:189:22)
+    at async GET (src\app\api\market\route.ts:15:26)
+  187 | export async function fetchGlobalData(): Promise<any> {
+  188 |   try {
+> 189 |     const response = await coingeckoClient.get('/global');
+      |                      ^
+  190 |     return response.data.data;
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error); {
+  code: 'ERR_BAD_REQUEST',
+  config: [Object],
+  request: [ClientRequest],
+  response: [Object],
+  status: 429,
+  constructor: [Function],
+  toJSON: [Function: toJSON]
+}
+Market API Error: Error: Failed to fetch global market data
+    at fetchGlobalData (src\lib\crypto-api.ts:193:11)
+    at async GET (src\app\api\market\route.ts:15:26)
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error);
+> 193 |     throw new Error('Failed to fetch global market data');
+      |           ^
+  194 |   }
+  195 | }
+  196 |
+ GET /api/market?includeGlobal=true 500 in 673ms
+[API] Error fetching global data: Error [AxiosError]: Request failed with status code 429
+    at async fetchGlobalData (src\lib\crypto-api.ts:189:22)
+    at async GET (src\app\api\market\route.ts:15:26)
+  187 | export async function fetchGlobalData(): Promise<any> {
+  188 |   try {
+> 189 |     const response = await coingeckoClient.get('/global');
+      |                      ^
+  190 |     return response.data.data;
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error); {
+  code: 'ERR_BAD_REQUEST',
+  config: [Object],
+  request: [ClientRequest],
+  response: [Object],
+  status: 429,
+  constructor: [Function],
+  toJSON: [Function: toJSON]
+}
+Market API Error: Error: Failed to fetch global market data
+    at fetchGlobalData (src\lib\crypto-api.ts:193:11)
+    at async GET (src\app\api\market\route.ts:15:26)
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error);
+> 193 |     throw new Error('Failed to fetch global market data');
+      |           ^
+  194 |   }
+  195 | }
+  196 |
+ GET /api/market?perPage=100&includeGlobal=true 500 in 800ms
+[API] Fetching market data from CoinGecko...
+[API] CoinGecko failed, trying CoinMarketCap... Request failed with status code 429
+[API] Error fetching global data: Error [AxiosError]: Request failed with status code 429
+    at async fetchGlobalData (src\lib\crypto-api.ts:189:22)
+    at async GET (src\app\api\market\route.ts:15:26)
+  187 | export async function fetchGlobalData(): Promise<any> {
+  188 |   try {
+> 189 |     const response = await coingeckoClient.get('/global');
+      |                      ^
+  190 |     return response.data.data;
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error); {
+  code: 'ERR_BAD_REQUEST',
+  config: [Object],
+  request: [ClientRequest],
+  response: [Object],
+  status: 429,
+  constructor: [Function],
+  toJSON: [Function: toJSON]
+}
+Market API Error: Error: Failed to fetch global market data
+    at fetchGlobalData (src\lib\crypto-api.ts:193:11)
+    at async GET (src\app\api\market\route.ts:15:26)
+  191 |   } catch (error) {
+  192 |     console.error('[API] Error fetching global data:', error);
+> 193 |     throw new Error('Failed to fetch global market data');
+      |           ^
+  194 |   }
+  195 | }
+  196 |
+ GET /api/market?perPage=100&includeGlobal=true 500 in 704ms
+
+> crypto-research-platform@0.1.0 dev
+> next dev --turbopack
+
+ ΓÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\Shai\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\Shai\Documents\Code Workspaces\Crypto-Stoic\crypto-research-platform\package-lock.json
+
+   Γû▓ Next.js 15.5.6 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.210.179:3000
+   - Environments: .env.local
+
+ Γ£ô Starting...
+ Γ£ô Ready in 2.1s
