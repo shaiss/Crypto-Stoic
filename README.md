@@ -54,7 +54,7 @@ An advanced AI-powered cryptocurrency research and analysis platform built with 
 - **Technical Indicators**: technicalindicators.js
 - **State Management**: Zustand
 - **Data Fetching**: TanStack Query (React Query)
-- **Data Source**: CoinGecko API (free tier)
+- **Data Sources**: CoinGecko API (primary), CoinMarketCap Pro (fallback), CoinCap Pro (fallback)
 
 ## Getting Started
 
@@ -81,9 +81,18 @@ npm install
 NEAR_AI_API_KEY=your_near_ai_api_key_here
 NEAR_AI_BASE_URL=https://cloud-api.near.ai/v1
 NEXT_PUBLIC_APP_NAME=CryptoAI Research
+
+# Optional: API keys for additional data sources
+COINMARKETCAP_API_KEY=your_coinmarketcap_api_key_here
+COINCAP_API_KEY=your_coincap_api_key_here
 ```
 
-Get your NEAR AI API key from [cloud.near.ai](https://cloud.near.ai)
+**Required:**
+- Get your NEAR AI API key from [cloud.near.ai](https://cloud.near.ai)
+
+**Optional (for enhanced reliability):**
+- CoinMarketCap API key from [coinmarketcap.com/api](https://coinmarketcap.com/api)
+- CoinCap Pro API key from [pro.coincap.io](https://pro.coincap.io)
 
 4. Run the development server:
 ```bash
@@ -144,13 +153,23 @@ This platform uses [NEAR AI Cloud](https://cloud.near.ai) for private, verifiabl
 - Technical analysis summaries
 - Query intent parsing
 
-### CoinGecko
-Cryptocurrency market data is sourced from the [CoinGecko API](https://www.coingecko.com/api) (free tier):
-- Real-time prices
-- Market data
-- Historical OHLC data
-- Trending coins
-- Search functionality
+### Cryptocurrency Data Sources
+The platform supports multiple data sources with automatic failover for reliability:
+
+**Primary: CoinGecko (Free)**
+- [CoinGecko API](https://www.coingecko.com/api) - No API key required
+- Real-time prices, market data, historical OHLC data
+- Trending coins and search functionality
+
+**Fallback 1: CoinMarketCap Pro (Optional)**
+- [CoinMarketCap API](https://coinmarketcap.com/api)
+- Activated when CoinGecko is unavailable
+- Requires API key (set `COINMARKETCAP_API_KEY`)
+
+**Fallback 2: CoinCap Pro (Optional)**
+- [CoinCap API](https://pro.coincap.io) ([API Docs](https://pro.coincap.io/api-docs))
+- Activated when both CoinGecko and CoinMarketCap fail
+- Requires API key for higher rate limits (set `COINCAP_API_KEY`)
 
 ## Usage Examples
 
@@ -207,6 +226,8 @@ MIT License - See LICENSE file for details
 ## Acknowledgments
 
 - [NEAR AI Cloud](https://cloud.near.ai) for AI infrastructure
-- [CoinGecko](https://www.coingecko.com) for market data
+- [CoinGecko](https://www.coingecko.com) for cryptocurrency market data
+- [CoinMarketCap](https://coinmarketcap.com) for fallback market data
+- [CoinCap](https://coincap.io) for additional market data resilience
 - [Recharts](https://recharts.org) for charting library
 - [Technical Indicators](https://github.com/anandanand84/technicalindicators) for TA calculations

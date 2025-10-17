@@ -13,14 +13,22 @@ Create a `.env.local` file in the root directory:
 NEAR_AI_API_KEY=your_near_ai_api_key_here
 NEAR_AI_BASE_URL=https://cloud-api.near.ai/v1
 NEXT_PUBLIC_APP_NAME=CryptoAI Research
+
+# Optional: API keys for data source failover
+COINMARKETCAP_API_KEY=your_coinmarketcap_api_key_here
+COINCAP_API_KEY=your_coincap_api_key_here
 ```
 
-**Get your API key:**
+**Required - NEAR AI API Key:**
 1. Visit [cloud.near.ai](https://cloud.near.ai)
 2. Sign in with GitHub or Google
 3. Navigate to API Keys section
 4. Create a new API key
 5. Add credits to your account
+
+**Optional - Additional Data Sources (for enhanced reliability):**
+- CoinMarketCap: [coinmarketcap.com/api](https://coinmarketcap.com/api)
+- CoinCap Pro: [pro.coincap.io](https://pro.coincap.io)
 
 ### 3. Run Development Server
 ```bash
@@ -94,7 +102,10 @@ npm start
 - **NEAR AI Cloud** for AI capabilities
   - Model: deepseek-chat-v3-0324
   - Private, verifiable inference in TEEs
-- **CoinGecko API** for cryptocurrency data
+- **Multi-Source Cryptocurrency Data:**
+  - Primary: CoinGecko API (free, no key required)
+  - Fallback 1: CoinMarketCap Pro (optional API key)
+  - Fallback 2: CoinCap Pro (optional API key)
 - **technicalindicators.js** for TA calculations
 
 ### Key Libraries
@@ -171,10 +182,10 @@ PORT=3001 npm run dev
 ```
 
 ### API Rate Limiting
-CoinGecko free tier has rate limits:
-- 10-50 calls/minute
-- Consider adding request caching
-- Or upgrade to CoinGecko Pro
+Data sources have rate limits:
+- CoinGecko free tier: 10-50 calls/minute
+- Platform automatically fails over to CoinMarketCap or CoinCap if limits exceeded
+- Consider adding optional API keys for CoinMarketCap and CoinCap Pro for maximum reliability
 
 ### NEAR AI API Issues
 - Check API key in `.env.local`

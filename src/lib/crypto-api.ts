@@ -3,6 +3,7 @@ import type { CryptoAsset, OHLCData } from '@/types';
 
 const COINGECKO_BASE_URL = 'https://api.coingecko.com/api/v3';
 const COINMARKETCAP_BASE_URL = 'https://pro-api.coinmarketcap.com/v1';
+const COINCAP_BASE_URL = 'https://api.coincap.io/v2';
 
 // Create axios instances with API keys
 const coingeckoClient = axios.create({
@@ -18,10 +19,19 @@ const coinmarketcapClient = axios.create({
   timeout: 8000,
 });
 
+const coincapClient = axios.create({
+  baseURL: COINCAP_BASE_URL,
+  headers: process.env.COINCAP_API_KEY ? {
+    'Authorization': `Bearer ${process.env.COINCAP_API_KEY}`,
+  } : {},
+  timeout: 8000,
+});
+
 /**
  * Fetch list of cryptocurrencies with market data
  * Primary: CoinGecko (free, works reliably)
- * Fallback: CoinMarketCap (when CoinGecko fails)
+ * Fallback 1: CoinMarketCap (when CoinGecko fails)
+ * Fallback 2: CoinCap Pro (when both fail)
  */
 export async function fetchMarketData(
   currency: string = 'usd',
@@ -74,8 +84,38 @@ export async function fetchMarketData(
         max_supply: coin.max_supply,
       }));
     } catch (cmcError) {
-      console.error('[API] Both CoinGecko and CoinMarketCap failed');
-      throw new Error('Failed to fetch market data from all sources');
+      console.warn('[API] CoinMarketCap failed, trying CoinCap...', (cmcError as any)?.message);
+      
+      // Final fallback to CoinCap Pro
+      try {
+        const coincapResponse = await coincapClient.get('/assets', {
+          params: {
+            limit: perPage,
+            offset: (page - 1) * perPage,
+          },
+        });
+
+        return coincapResponse.data.data.map((coin: any, index: number) => ({
+          id: coin.id,
+          symbol: coin.symbol,
+          name: coin.name,
+          image: `https://assets.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`,
+          current_price: parseFloat(coin.priceUsd) || 0,
+          market_cap: parseFloat(coin.marketCapUsd) || 0,
+          market_cap_rank: (page - 1) * perPage + index + 1,
+          total_volume: parseFloat(coin.volumeUsd24Hr) || 0,
+          price_change_24h: null,
+          price_change_percentage_24h: parseFloat(coin.changePercent24Hr) || null,
+          price_change_percentage_7d: null,
+          price_change_percentage_30d: null,
+          circulating_supply: parseFloat(coin.supply) || 0,
+          total_supply: parseFloat(coin.supply) || 0,
+          max_supply: parseFloat(coin.maxSupply) || null,
+        }));
+      } catch (coincapError) {
+        console.error('[API] All data sources failed (CoinGecko, CoinMarketCap, CoinCap)', (coincapError as any)?.message);
+        throw new Error('Failed to fetch market data from all sources');
+      }
     }
   }
 }

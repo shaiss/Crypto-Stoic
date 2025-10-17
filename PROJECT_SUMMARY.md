@@ -73,7 +73,7 @@ A fully functional AI-powered cryptocurrency research and analysis platform that
 - **Data Fetching:** TanStack Query (React Query)
 - **HTTP Client:** Axios
 - **Icons:** Lucide React
-- **Data Source:** CoinGecko API (free tier)
+- **Data Sources:** CoinGecko API (primary), CoinMarketCap Pro (fallback), CoinCap Pro (fallback)
 
 ### Project Structure
 ```
@@ -174,10 +174,11 @@ crypto-research-platform/
    - TEE (Trusted Execution Environment) for privacy
    - DeepSeek model for cost-effective inference
 
-2. **Cryptocurrency-Focused**
+2. **Cryptocurrency-Focused with Multiple Data Sources**
    - Exclusive focus on crypto markets
-   - Integration with CoinGecko (free tier)
+   - Multi-source failover: CoinGecko → CoinMarketCap → CoinCap Pro
    - Trending coins and market sentiment
+   - Automatic fallback for maximum uptime
 
 3. **Unique Design**
    - Custom color scheme (blue/indigo gradient)
@@ -241,17 +242,29 @@ npm start
 NEAR_AI_API_KEY=your_near_ai_api_key_here
 NEAR_AI_BASE_URL=https://cloud-api.near.ai/v1
 NEXT_PUBLIC_APP_NAME=CryptoAI Research
+
+# Optional: Additional data source API keys for failover
+COINMARKETCAP_API_KEY=your_coinmarketcap_api_key_here
+COINCAP_API_KEY=your_coincap_api_key_here
 ```
 
-Get your API key from [cloud.near.ai](https://cloud.near.ai)
+**Required:**
+- Get your NEAR AI API key from [cloud.near.ai](https://cloud.near.ai)
+
+**Optional (for enhanced reliability):**
+- CoinMarketCap API key from [coinmarketcap.com/api](https://coinmarketcap.com/api)
+- CoinCap Pro API key from [pro.coincap.io](https://pro.coincap.io)
 
 ### Available AI Models
 Visit https://cloud.near.ai/models to see all available models.
 Default: `deepseek-chat-v3-0324`
 
 ### Data Sources
-- **Crypto Data:** CoinGecko API (free tier, no key required)
-- **AI:** NEAR AI Cloud (key provided)
+- **Crypto Data (Multi-Source Failover):**
+  - Primary: CoinGecko API (free tier, no key required)
+  - Fallback 1: CoinMarketCap Pro (optional, requires API key)
+  - Fallback 2: CoinCap Pro (optional, requires API key for rate limits)
+- **AI:** NEAR AI Cloud (key required)
 - **Technical Analysis:** Calculated locally using technicalindicators.js
 
 ## Potential Enhancements
@@ -326,7 +339,9 @@ MIT License - Free to use, modify, and distribute.
 ## Credits
 
 - **NEAR AI Cloud** for AI infrastructure
-- **CoinGecko** for cryptocurrency data
+- **CoinGecko** for primary cryptocurrency data
+- **CoinMarketCap** for fallback cryptocurrency data
+- **CoinCap** for additional data resilience
 - **Next.js** team for the excellent framework
 - **Vercel** for hosting platform
 - **Open source community** for all the amazing libraries
